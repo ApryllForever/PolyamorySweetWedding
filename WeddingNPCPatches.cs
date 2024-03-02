@@ -7,7 +7,7 @@ namespace WeddingTweaks
 {
     public partial class ModEntry
     {
-
+        /*
         [HarmonyPatch(typeof(NPC), nameof(NPC.checkAction))]
         public static class NPC_checkAction_Patch
         {
@@ -23,7 +23,7 @@ namespace WeddingTweaks
                 __result = true;
             }
         }
-
+        */
         [HarmonyPatch(typeof(NPC), "engagementResponse")]
         public static class NPC_engagementResponse_Patch
         {
