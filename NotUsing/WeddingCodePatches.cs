@@ -20,7 +20,7 @@ namespace WeddingTweaks
         {
             public static void Prefix(GameLocation __instance)
             {
-                if (!Config.EnableMod || !Config.FixWeddingStart)
+                if (!Config.EnableMod /*|| !Config.FixWeddingStart*/)
                     return;
                 if (!Game1.eventUp && Game1.weddingsToday.Count > 0 && (Game1.CurrentEvent == null || Game1.CurrentEvent.id != "-2") && Game1.currentLocation != null && Game1.currentLocation.Name != "Temp")
                 {
@@ -35,7 +35,7 @@ namespace WeddingTweaks
         {
             public static void Prefix(Farmer farmer)
             {
-                if (!Config.EnableMod || !Config.FixWeddingStart)
+                if (!Config.EnableMod /*|| !Config.FixWeddingStart*/)
                     return;
                 farmer.friendshipData[farmer.spouse].Status = FriendshipStatus.Engaged;
             }

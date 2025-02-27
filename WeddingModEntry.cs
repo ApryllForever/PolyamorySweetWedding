@@ -251,12 +251,14 @@ namespace WeddingTweaks
                     setValue: value => Config.DaysUntilMarriage = Math.Max(1, value),
                     min: 1
                 );
+                /*
                 configMenu.AddBoolOption(
                     mod: ModManifest,
                     name: () => "Fix Wedding Event Start",
                     getValue: () => Config.FixWeddingStart,
                     setValue: value => Config.FixWeddingStart = value
-                );
+                );*/
+
                 configMenu.AddBoolOption(
                     mod: ModManifest,
                     name: () => "Other spouses join weddings",
