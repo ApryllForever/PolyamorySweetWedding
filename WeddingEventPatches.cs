@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewValley;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 
 namespace WeddingTweaks
 {
@@ -19,6 +17,24 @@ namespace WeddingTweaks
             new int[]{30,63,3}
         };
         public static bool startingLoadActors = false;
+        private static MethodInfo? addActorMethod = null;
+
+        public static void AddActor(Event @event, string name, int x, int y, int facingDirection, GameLocation location)
+        {
+            if (addActorMethod == null)
+            {
+                addActorMethod = @event.GetType().GetMethod("addActor", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (addActorMethod == null)
+                {
+                    // Could not find the addActor method
+                    SMonitor.Log($"Event.addActor method not found");
+                    return;
+                }
+            }
+
+            // Signature: addActor(string name, int x, int y, int facingDirection, GameLocation location)
+            addActorMethod.Invoke(@event, new object[] { name, x, y, facingDirection, location });
+        }
 
         [HarmonyPatch(typeof(Event), "setUpCharacters")]
         public static class Event_setUpCharacters_Patch
@@ -29,10 +45,9 @@ namespace WeddingTweaks
                 {
                     if (!__instance.isWedding)
                         return;
-                  
-                   
 
-                    List<string> spouses = Misc.GetSpouses(Game1.player, 0).Keys.ToList();
+                    SMonitor.Log($"In wedding for farmer {__instance.farmer.Name}");
+                    List<string> spouses = Misc.GetSpouses(__instance.farmer, 0).Keys.ToList();
                     Misc.ShuffleList(ref spouses);
                     bool addSpouses = Config.AllSpousesJoinWeddings && spouses.Count > 0 && polyamorySweetLoveAPI is not null;
 
@@ -44,11 +59,26 @@ namespace WeddingTweaks
                         weddingPositions.Add(allWeddingPositions[i]);
                     }
 
-                    foreach (NPC actor in __instance.actors)
+                    if (addSpouses)
                     {
-                        
-                        if (addSpouses && spouses.Contains(actor.Name))
+                        foreach (string spouse in spouses)
                         {
+                            var actor = __instance.actors.FirstOrDefault(p => p.Name == spouse);
+                            if (actor == null)
+                            {
+                                // Probably a modded spouse, find and add to the wedding
+                                SMonitor.Log($"Adding {spouse} to event");
+                                AddActor(__instance, spouse, 0, 0, 0, location);
+                                
+                                // Search for actor again now that it should have been added to the event
+                                actor = __instance.actors.FirstOrDefault(p => p.Name == spouse);
+                                if (actor == null)
+                                {
+                                    SMonitor.Log($"Failed to add {spouse} to wedding event", LogLevel.Warn);
+                                    continue;
+                                }
+                            }
+                            
                             int idx = spouses.IndexOf(actor.Name);
 
                             Vector2 pos;
@@ -110,31 +140,6 @@ namespace WeddingTweaks
                 catch (Exception ex)
                 {
                     SMonitor.Log($"Failed in {nameof(Event_setUpCharacters_Patch)}:\n{ex}", LogLevel.Error);
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(Event), nameof(Event.endBehaviors), new Type[] { typeof(string[]), typeof(GameLocation) })]
-        public static class Event_endBehaviors_Patch
-        {
-             public static void Postfix(string[] args, GameLocation location)
-            {
-                try
-                {
-                    if (!Config.AllSpousesJoinWeddings || polyamorySweetLoveAPI == null)
-                        return;
-                    if (args != null && args.Length > 1)
-                    {
-                        string text = args[1];
-                        if (text == "wedding")
-                        {
-                            polyamorySweetLoveAPI.PlaceSpousesInFarmhouse(Utility.getHomeOfFarmer(Game1.player));
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    SMonitor.Log($"Failed in {nameof(Event_endBehaviors_Patch)}:\n{ex}", LogLevel.Error);
                 }
             }
         }
