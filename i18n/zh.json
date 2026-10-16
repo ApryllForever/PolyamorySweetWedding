@@ -1,5 +1,10 @@
-﻿{
+{
   "ask-x-to-witness": "请 {0} 在婚礼上担任你的见证人？",
   "witness-accept": "当然！我很荣幸成为你的见证人！$h",
-  "witness-decline": "对不起，我不喜欢那样做。$s"
+  "witness-decline": "对不起，我不喜欢那样做。$s",
+    "config.enable-mod.name": "启用模组",
+    "config.days-until-marriage.name": "求婚与婚礼之间的天数",
+    "config.fix-wedding-start.name": "修复婚礼事件开场",
+    "config.all-spouses-join-weddings.name": "其他配偶参加婚礼",
+    "config.all-spouses-wear-marriage-clothes-at-weddings.name": "其他配偶穿着结婚礼服"
 }

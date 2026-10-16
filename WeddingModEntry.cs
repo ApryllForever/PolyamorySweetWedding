@@ -240,13 +240,13 @@ namespace WeddingTweaks
                 );
                 configMenu.AddBoolOption(
                     mod: ModManifest,
-                    name: () => "Mod Enabled",
+                    name: () => Helper.Translation.Get("config.enable-mod.name"),
                     getValue: () => Config.EnableMod,
                     setValue: value => Config.EnableMod = value
                 );
                 configMenu.AddNumberOption(
                     mod: ModManifest,
-                    name: () => "Days between proposal and wedding",
+                    name: () => Helper.Translation.Get("config.days-until-marriage.name"),
                     getValue: () => Config.DaysUntilMarriage,
                     setValue: value => Config.DaysUntilMarriage = Math.Max(1, value),
                     min: 1
@@ -254,20 +254,20 @@ namespace WeddingTweaks
                 /*
                 configMenu.AddBoolOption(
                     mod: ModManifest,
-                    name: () => "Fix Wedding Event Start",
+                    name: () => Helper.Translation.Get("config.fix-wedding-start.name"),
                     getValue: () => Config.FixWeddingStart,
                     setValue: value => Config.FixWeddingStart = value
                 );*/
 
                 configMenu.AddBoolOption(
                     mod: ModManifest,
-                    name: () => "Other spouses join weddings",
+                    name: () => Helper.Translation.Get("config.all-spouses-join-weddings.name"),
                     getValue: () => Config.AllSpousesJoinWeddings,
                     setValue: value => Config.AllSpousesJoinWeddings = value
                 );
                 configMenu.AddBoolOption(
                     mod: ModManifest,
-                    name: () => "Other spouses wear marriage clothes",
+                    name: () => Helper.Translation.Get("config.all-spouses-wear-marriage-clothes-at-weddings.name"),
                     getValue: () => Config.AllSpousesWearMarriageClothesAtWeddings,
                     setValue: value => Config.AllSpousesWearMarriageClothesAtWeddings = value
                 );
